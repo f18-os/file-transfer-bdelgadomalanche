@@ -56,20 +56,24 @@ if s is None:
     print('could not open socket')
     sys.exit(1)
 
+#Reused Dr. Freudenthal's Client code for the most part
+
 inputStr = input("Input your file's name: ")
-print("HI")
+#If file does not exist it will keep prompting the user to send the name of an existing file
 while not os.path.exists(inputStr):
     print("Invalid File, Try Again")
     inputStr = input("Input your file's name: ")
 
 inFile = open(inputStr, "r")
 
-
+#Try catch block to handle errors while reading the file
 try:
+    #File's name is sent first to create file on server side
     print("sending name: " + inputStr)
     framedSend(s, bytes(inputStr.rstrip("\n\r"), encoding='ascii'), debug)
     print("received:", framedReceive(s, debug))
     
+    #For every line in the file the client will send a message containing that line
     for line in inFile:
         if len(line) > 0:
             print("sending: " + line)
