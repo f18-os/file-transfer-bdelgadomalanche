@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # Echo client program
-import socket, sys, re
+import socket, sys, re, os
 
 sys.path.append("../lib")       # for params
 import params
@@ -57,11 +57,23 @@ if s is None:
     sys.exit(1)
 
 inputStr = input("Input your file's name: ")
+print("HI")
+while not os.path.exists(inputStr):
+    print("Invalid File, Try Again")
+    inputStr = input("Input your file's name: ")
+
 inFile = open(inputStr, "r")
+
+
 try:
+    print("sending name: " + inputStr)
+    framedSend(s, bytes(inputStr.rstrip("\n\r"), encoding='ascii'), debug)
+    print("received:", framedReceive(s, debug))
+    
     for line in inFile:
-        print("sending: " + line)
-        framedSend(s, bytes(line, encoding='ascii'), debug)
-        print("received:", framedReceive(s, debug))
+        if len(line) > 0:
+            print("sending: " + line)
+            framedSend(s, bytes(line.rstrip("\n\r"), encoding='ascii'), debug)
+            print("received:", framedReceive(s, debug))
 except:
     print("Error reading file")
