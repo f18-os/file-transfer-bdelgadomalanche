@@ -10,7 +10,7 @@ from framedSock import framedSend, framedReceive
 
 
 switchesVarDefaults = (
-    (('-s', '--server'), 'server', "127.0.0.1:50001"),
+    (('-s', '--server'), 'server', "127.0.0.1:50000"),
     (('-d', '--debug'), "debug", False), # boolean (set if present)
     (('-?', '--usage'), "usage", False), # boolean (set if present)
     )
@@ -64,7 +64,7 @@ while not os.path.exists(inputStr):
     print("Invalid File, Try Again")
     inputStr = input("Input your file's name: ")
 
-inFile = open(inputStr, "r")
+inFile = open(inputStr, "rb")
 
 #Try catch block to handle errors while reading the file
 try:
@@ -74,10 +74,15 @@ try:
     print("received:", framedReceive(s, debug))
     
     #For every line in the file the client will send a message containing that line
-    for line in inFile:
-        if len(line) > 0:
-            print("sending: " + line)
-            framedSend(s, bytes(line.rstrip("\n\r"), encoding='ascii'), debug)
-            print("received:", framedReceive(s, debug))
-except:
+    print("Sending...\n")
+    l = inFile.read(100)
+    while (l):
+        print("sending: ")
+        framedSend(s, l, debug)
+        print("received:", framedReceive(s, debug))
+        l = inFile.read(100)
+    inFile.close()
+            
+except Exception as e:
+    print(e)
     print("Error reading file")

@@ -7,8 +7,8 @@ Process:
     -The server forks once it receives a client
     -The client and server are kept in seperate directories to avoid overwriting the input file being used
         as it would share the name and path as the output file being created
-    -The client then sends the data in the file line by line to the server
-    -The server then appends every line to the new file that was created
+    -The client then sends the data in the file every 100 bytes to the server
+    -The server then appends the bytes to the new file that was created
     -After the server receives an empty payload it exits the child and waits for a new connection
 
 Steps:
